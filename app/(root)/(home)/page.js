@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { fetchExercises } from "./utils/api";
+import { UserButton } from "@clerk/nextjs";
+import { fetchExercises } from "@/app/utils/api";
 
 const Home = () => {
   const [exercises, setExercises] = useState([]);
@@ -28,6 +29,7 @@ const Home = () => {
 
   return (
     <main className="flex flex-grow flex-col justify-between gap-4 p-8 text-center">
+        <UserButton afterSignOutUrl="/" />
       <h1 className="text-4xl m-3">Exercise List</h1>
 
       <div className="flex gap-4 place-content-center text-black m-4">
