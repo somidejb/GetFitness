@@ -2,6 +2,19 @@
 import { useEffect, useState } from "react";
 import { UserButton } from "@clerk/nextjs";
 import { fetchExercises } from "@/app/utils/api";
+import { Roboto, Space_Grotesk } from "next/font/google";
+
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "700"],
+  variable: "--font-roboto",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weights: ["300", "400", "500", "600", "700"],
+  variable: "--font-spaceGrotesk",
+});
 
 const Home = () => {
   const [exercises, setExercises] = useState([]);
@@ -9,6 +22,7 @@ const Home = () => {
   const [selectedMuscle, setSelectedMuscle] = useState("");
   const [selectedDifficulty, setSelectedDifficulty] = useState("");
   const [showResults, setShowResults] = useState(false);
+  const [expandedExercises, setExpandedExercises] = useState([]);
 
   const generateWorkout = async () => {
     try {
@@ -20,6 +34,7 @@ const Home = () => {
       // Randomly select 5 exercises
       const randomExercises = data.sort(() => Math.random() - 0.5).slice(0, 5);
       setExercises(randomExercises);
+      setExpandedExercises(new Array(randomExercises.length).fill(false));
       setShowResults(true);
     } catch (error) {
       // Handle errors
@@ -27,12 +42,24 @@ const Home = () => {
     }
   };
 
-  return (
-    <main className="flex flex-grow flex-col justify-between gap-4 p-8 text-center">
-        <UserButton afterSignOutUrl="/" />
-      <h1 className="text-4xl m-3">Exercise List</h1>
+  const toggleInstructions = (index) => {
+    setExpandedExercises((prevExpanded) => {
+      const newExpanded = [...prevExpanded];
+      newExpanded[index] = !newExpanded[index];
+      return newExpanded;
+    });
+  };
 
-      <div className="flex gap-4 place-content-center text-black m-4">
+  return (
+    <main className="flex flex-grow flex-col justify-between gap-4 p-8 text-center items-center ">
+      <UserButton afterSignOutUrl="/" />
+      <h1 className={`${spaceGrotesk.className} font-bold text-3xl text-white`}>
+        GetFitness
+      </h1>
+
+      <div
+        className={`${roboto.className} flex gap-4 flex-col text-black m-4 w-96`}
+      >
         {/* Dropdown for Exercise Type */}
         <select
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 w-60"
@@ -86,7 +113,7 @@ const Home = () => {
       <div className="flex place-content-center m-3">
         <button
           onClick={generateWorkout}
-          className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-full w-48"
+          className={`${roboto.className} bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-full w-48 font-medium`}
         >
           Generate Workout
         </button>
@@ -94,13 +121,21 @@ const Home = () => {
 
       <div className="flex place-content-center m-3">
         {showResults && (
-          <ul className="block max-w-sm px-6 py-4 bg-white border border-gray-200 rounded-lg shadow  dark:bg-gray-800 dark:border-gray-700 ">
-            {exercises.map((exercise) => (
+          <ul className="block max-w-sm px-8 py-4 bg-white border border-gray-200 rounded-lg shadow  dark:bg-gray-800 dark:border-gray-700 ">
+            {exercises.map((exercise, index) => (
               <li
-                className="font-normal text-gray-900 dark:text-white m-3"
+                className={`${spaceGrotesk.className} text-gray-900 dark:text-white m-3`}
                 key={exercise.id}
               >
-                {exercise.name}
+                <div
+                  className="cursor-pointer"
+                  onClick={() => toggleInstructions(index)}
+                >
+                  <strong>{exercise.name}</strong>
+                </div>
+                {expandedExercises[index] && (
+                  <p className="mt-2">{exercise.instructions}</p>
+                )}
               </li>
             ))}
           </ul>
