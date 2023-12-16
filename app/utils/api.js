@@ -1,6 +1,7 @@
 // utils/api.js
 import axios from "axios";
 
+
 const API_BASE_URL = "https://api.api-ninjas.com/v1/exercises";
 
 export const fetchExercises = async (muscle) => {
@@ -22,3 +23,4 @@ export const fetchExercises = async (muscle) => {
     throw error;
   }
 };
+
