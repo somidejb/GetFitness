@@ -8,6 +8,19 @@ import { exerciseLinks } from "@/constants";
 import Link from "next/link";
 import WorkoutList from "@/sections/WorkoutList";
 import WorkoutCard from "@/sections/WorkoutCard";
+import { Roboto, Space_Grotesk } from "next/font/google";
+
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "700"],
+  variable: "--font-roboto",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weights: ["300", "400", "500", "600", "700"],
+  variable: "--font-spaceGrotesk",
+});
 
 const Home = () => {
   const [exercises, setExercises] = useState([]);
@@ -15,6 +28,7 @@ const Home = () => {
   const [selectedMuscle, setSelectedMuscle] = useState("");
   const [selectedDifficulty, setSelectedDifficulty] = useState("");
   const [showResults, setShowResults] = useState(false);
+  const [expandedExercises, setExpandedExercises] = useState([]);
 
 
   const generateWorkout = async () => {
@@ -27,12 +41,21 @@ const Home = () => {
       // Randomly select 5 exercises
       const randomExercises = data.sort(() => Math.random() - 0.5).slice(0, 5);
       setExercises(randomExercises);
+      setExpandedExercises(new Array(randomExercises.length).fill(false));
       setShowResults(true);
 
     } catch (error) {
       // Handle errors
       console.error(error);
     }
+  };
+
+  const toggleInstructions = (index) => {
+    setExpandedExercises((prevExpanded) => {
+      const newExpanded = [...prevExpanded];
+      newExpanded[index] = !newExpanded[index];
+      return newExpanded;
+    });
   };
 
   return (
@@ -98,31 +121,38 @@ const Home = () => {
           </select>
         </div>
 
-        <div className="flex place-content-center m-3">
-          <button
-            onClick={generateWorkout}
-            className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-full w-48"
-          >
-            Generate Workout
-          </button>
-        </div>
+      <div className="flex place-content-center m-3">
+        <button
+          onClick={generateWorkout}
+          className={`${roboto.className} bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-full w-48 font-medium`}
+        >
+          Generate Workout
+        </button>
+      </div>
 
-        <div className="flex place-content-center m-3">
-          {showResults && (
-            <ul className="block max-w-sm px-6 py-4 bg-white border border-gray-200 rounded-lg shadow  dark:bg-gray-800 dark:border-gray-700 ">
-              {exercises.map((exercise) => (
-                <li
-                  className="font-normal text-gray-900 dark:text-white m-3"
-                  key={exercise.id}
+      <div className="flex place-content-center m-3">
+        {showResults && (
+          <ul className="block max-w-sm px-8 py-4 bg-white border border-gray-200 rounded-lg shadow  dark:bg-gray-800 dark:border-gray-700 ">
+            {exercises.map((exercise, index) => (
+              <li
+                className={`${spaceGrotesk.className} text-gray-900 dark:text-white m-3`}
+                key={exercise.id}
+              >
+                <div
+                  className="cursor-pointer"
+                  onClick={() => toggleInstructions(index)}
                 >
-                  {exercise.name}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </main>
-    </>
+                  <strong>{exercise.name}</strong>
+                </div>
+                {expandedExercises[index] && (
+                  <p className="mt-2">{exercise.instructions}</p>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </main>
   );
 };
 
