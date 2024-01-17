@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`${roboto.variable} `}>{children}</body>
+        <body className={`${roboto.variable}  `}>{children}</body>
       </html>
     </ClerkProvider>
   );

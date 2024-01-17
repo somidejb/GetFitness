@@ -58,7 +58,7 @@ const Home = () => {
 
   return (
     <main>
-      <h1 className="text-left text-4xl text-white">Let's Workout</h1>
+      <h1 className="text-left text-4xl font-semibold  mb-4">Let's Workout</h1>
       <LocalSearchBar
         route="/"
         iconPosition="left"
@@ -118,16 +118,16 @@ const Home = () => {
         </select>
       </div>
 
-      <div className="flex place-content-center m-3">
+      <div className="flex place-content-center m-6">
         <button
           onClick={generateWorkout}
-          className={`${roboto.className} bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-full w-48 font-medium`}
+          className={`${roboto.className} bg-accents hover:bg-accents/80 text-white py-3 px-4 rounded-full w-48 font-medium`}
         >
           Generate Workout
         </button>
       </div>
 
-      <div className="flex place-content-center m-3">
+      <div className="flex place-content-center m-10">
         {showResults && (
           <ul className="block max-w-sm px-8 py-4 bg-white border border-gray-200 rounded-lg shadow  dark:bg-gray-800 dark:border-gray-700 ">
             {exercises.map((exercise, index) => (
