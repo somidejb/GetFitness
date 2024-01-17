@@ -89,8 +89,8 @@ const Home = () => {
           onChange={(e) => setSelectedMuscle(e.target.value)}
         >
           <option value="">Select Muscle</option>
-          <option value="abdominals">abdominals</option>
-          <option value="abductors">abductors</option>
+          <option value="abdominals">Abdominals</option>
+          <option value="abductors">Abductors</option>
           <option value="biceps">Biceps</option>
           <option value="calves">Calves</option>
           <option value="chest">Chest</option>
